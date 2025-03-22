@@ -31,18 +31,18 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           mkdir -p release
-          cp target/release/my_bevy_game release/
-          tar -czvf my_bevy_game-${{ runner.os }}.tar.gz -C release .
+          cp target/release/starmans-odyssey release/
+          tar -czvf starmans-odyssey-${{ runner.os }}.tar.gz -C release .
 
       - name: 📦 Package build (Windows)
         if: runner.os == 'Windows'
         run: |
           mkdir release
-          copy target\release\my_bevy_game.exe release\
-          tar -czvf my_bevy_game-Windows.tar.gz -C release .
+          copy target\\release\\starmans-odyssey.exe release\\
+          tar -czvf starmans-odyssey-Windows.tar.gz -C release .
 
       - name: 📤 Upload Binaries
         uses: actions/upload-artifact@v4
         with:
-          name: my_bevy_game-${{ runner.os }}
-          path: my_bevy_game-*.tar.gz
+          name: starmans-odyssey-${{ runner.os }}
+          path: starmans-odyssey-*.tar.gz
