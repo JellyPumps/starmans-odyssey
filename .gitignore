@@ -1,0 +1,21 @@
+# Rust / Cargo
+target/
+Cargo.lock
+
+# Assets & Build Files
+assets/
+
+# Editor / OS Specific Files
+.vscode/
+*.DS_Store
+Thumbs.db
+
+# Build Artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+*.log
+
+# GitHub Actions Cache
+release/
