@@ -15,6 +15,6 @@ evade deadly radiation, and as they uncover the truth beneath the ice, _It_ will
 
 ### Build Status
 
-[![Build](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/build.yml/badge.svg)](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/buildgame.yml)
+![Build Status](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/buildgame.yml/badge.svg)
 
 
