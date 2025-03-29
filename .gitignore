@@ -1,12 +1,8 @@
-# Rust / Cargo
-target/
-Cargo.lock
-
 # Assets & Build Files
 assets/
 
 # Editor / OS Specific Files
-.vscode/
+.idea/
 *.DS_Store
 Thumbs.db
 
