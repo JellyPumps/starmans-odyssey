@@ -10,11 +10,12 @@ evade deadly radiation, and as they uncover the truth beneath the ice, _It_ will
 ---
 
 
-[![GitHub Releases Downloads](https://img.shields.io/github/downloads/JellyPumps/STARMAN/total)](https://github.com/JellyPumps/STARMAN/releases)
-[![GitHub Stars](https://img.shields.io/github/stars/JellyPumps/STARMAN?style=flat&label=stars)](https://github.com/JellyPumps/STARMAN/stargazers)
+[![GitHub Releases Downloads](https://img.shields.io/github/downloads/JellyPumps/starmans-odyssey/total)](https://github.com/JellyPumps/STARMAN/releases)
+[![GitHub Stars](https://img.shields.io/github/stars/JellyPumps/starmans-odyssey?style=flat&label=stars)](https://github.com/JellyPumps/STARMAN/stargazers)
 
 ### Build Status
 
-![Build Status](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/buildgame.yml/badge.svg)
-
+[![Linux](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/linux.yml/badge.svg)](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/linux.yml)
+[![macOS](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/macos.yml/badge.svg)](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/macos.yml)
+[![Windows](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/windows.yml/badge.svg)](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/windows.yml)
 
