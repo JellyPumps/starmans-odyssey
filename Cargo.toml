@@ -1,7 +1,25 @@
 [package]
 name = "starman"
 version = "0.1.0"
-edition = "2024"
+edition = "2025"
 
 [dependencies]
-bevy = "0.15.3"
+bevy = {version = "0.16.0-rc.2", features = ["wayland"]}
+rand = "0.8"
+
+[features]
+default = [
+    "dev_native",
+]
+
+dev = [
+    "bevy/dynamic_linking",
+    "bevy/bevy_dev_tools",
+    "bevy/bevy_ui_debug",
+]
+
+dev_native = [
+    "dev",
+    "bevy/file_watcher",
+    "bevy/embedded_watcher",
+]
