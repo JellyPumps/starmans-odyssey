@@ -15,6 +15,7 @@ evade deadly radiation, and as they uncover the truth beneath the ice, _It_ will
 
 ### Build Status
 
-![Linux](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/linux.yml/badge.svg)
-![macOS](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/macos.yml/badge.svg)
-![Windows](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/windows.yml/badge.svg)
+[![Linux](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/linux.yml/badge.svg)](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/linux.yml)
+[![macOS](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/macos.yml/badge.svg)](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/macos.yml)
+[![Windows](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/windows.yml/badge.svg)](https://github.com/JellyPumps/starmans-odyssey/actions/workflows/windows.yml)
+
