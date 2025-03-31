@@ -8,7 +8,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download dependencies
-        run:
+        run: |
           sudo apt update
           sudo apt install -y libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev \
           libgl1-mesa-dev libglu1-mesa-dev
