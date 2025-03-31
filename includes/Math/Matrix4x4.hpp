@@ -4,55 +4,39 @@
 
 #pragma once
 
-#include <vector>
+#include <cmath>
 #include <array>    // Stack storage
-#include <immintrin.h>  // SSE/AVX intrinsics
+
+#if defined(__x86_64__) || defined(_M_X64)
+    #include <immintrin.h>  // SSE/AVX
+    #define USE_SSE
+#elif defined(__aarch64__) || defined(_M_ARM64)
+    #include <arm_neon.h>   // NEON
+    #define USE_NEON
+#endif
 
 namespace Math {
-    class Matrix {
+    class Matrix4x4 {
     public:
-        // Init with dimensions
-        Matrix(size_t rows, size_t cols);
+        // Column-major storage
+        std::array<std::array<float, 4>, 4> data;
 
-        // Init from 2D vector
-        explicit Matrix(std::vector<std::vector<double>>&& data);
+        // Constructors
+        Matrix4x4();
+        explicit Matrix4x4(const std::array<std::array<float, 4>, 4>& cols);
 
-        // Copy Constructor
-        Matrix(const Matrix& other);
+        // Static Factories
+        static Matrix4x4 identity();
+        static Matrix4x4 zero();
 
-        // Move Constructor
-        Matrix(Matrix&& other) noexcept;
+        // SIMD Accelerated operations
+        Matrix4x4 operator*(const Matrix4x4& other) const;
+        void multiply(const Matrix4x4& other, Matrix4x4& out) const;
+        Matrix4x4 transpose() const;
 
-        ~Matrix() = default;
-
-        [[nodiscard]] size_t rows() const { return rows_; }
-        [[nodiscard]] size_t cols() const { return cols_; }
-
-        double& operator()(size_t row, size_t col);
-        const double& operator()(size_t row, size_t col) const;
-
-        // Copy & Move
-        Matrix& operator=(const Matrix& other);
-        Matrix& operator=(Matrix&& other) noexcept;
-
-        // Addition, Multiplication & Subtraction
-        Matrix operator+(const Matrix& other) const;
-        Matrix operator-(const Matrix& other) const;
-        Matrix operator*(const Matrix& other) const;
-
-        Matrix operator*(double scalar) const;
-
-        [[nodiscard]] Matrix transpose() const;
-    private:
-        // Ints
-        size_t rows_;
-        size_t cols_;
-        double init_value_ = 0.0;
-
-        // Vectors
-        std::vector<std::vector<double>> data_;
+        // Accessors
+        const float *operator[](size_t col) const { return data[col].data(); }
+        float *operator[](size_t col) { return data[col].data(); }
     };
-
-    Matrix operator*(double scalar, const Matrix& matrix);
 }
 
