@@ -3,8 +3,8 @@
 * Entry point
 */
 
-#include "Tools/Window.hpp"
-#include "Tools/Input.hpp"
+#include "Window.hpp"
+#include "Input.hpp"
 #include <SDL2/SDL.h>
 
 int main() {
