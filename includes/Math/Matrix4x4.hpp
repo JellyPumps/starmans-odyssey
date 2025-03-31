@@ -5,6 +5,8 @@
 #pragma once
 
 #include <vector>
+#include <array>    // Stack storage
+#include <immintrin.h>  // SSE/AVX intrinsics
 
 namespace Math {
     class Matrix {
