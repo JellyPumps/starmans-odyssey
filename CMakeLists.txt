@@ -17,6 +17,8 @@ set(SOURCES
         includes/Math/Vectors.hpp
         src/Rendering/Camera.cpp
         includes/Rendering/Camera.hpp
+        includes/Math/Matrix.hpp
+        src/Tools/Math/Matrix.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
