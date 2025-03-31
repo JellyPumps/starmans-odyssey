@@ -31,8 +31,6 @@ namespace Math {
 
         // SIMD Accelerated operations
         Matrix4x4 operator*(const Matrix4x4& other) const;
-        void multiply(const Matrix4x4& other, Matrix4x4& out) const;
-        Matrix4x4 transpose() const;
 
         // Accessors
         const float *operator[](size_t col) const { return data[col].data(); }

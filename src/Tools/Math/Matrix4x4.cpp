@@ -17,6 +17,16 @@ namespace Math {
 
   Matrix4x4::Matrix4x4(const std::array<std::array<float, 4>, 4> &cols) : data(cols) {}
 
+  Matrix4x4 Matrix4x4::identity() { return {}; }
+
+  Matrix4x4 Matrix4x4::zero() { return Matrix4x4({{
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0},
+    {0, 0, 0, 0}
+  }}); }
+
+
   Matrix4x4 Matrix4x4::operator*(const Matrix4x4 &other) const {
     Matrix4x4 result;
 
@@ -57,7 +67,6 @@ namespace Math {
 
     return result;
   }
-
 
 
 }
