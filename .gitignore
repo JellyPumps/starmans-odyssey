@@ -1,5 +1,6 @@
 # Assets & Build Files
 assets/
+cmake-build-debug/
 
 # Editor / OS Specific Files
 .idea/
