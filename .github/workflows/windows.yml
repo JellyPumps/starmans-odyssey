@@ -1,0 +1,15 @@
+name: Windows
+on: [push]
+jobs:
+  linux-build:
+    name: Windows build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download dependencies
+        run: choco install sdl2 sdl2_image sdl2_ttf sdl2_mixer opengl
+      - name: Configure cmake
+        run: cmake -B build
+      - name: Build
+        run: cmake --build build --config Release
