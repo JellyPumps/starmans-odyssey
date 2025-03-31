@@ -6,6 +6,7 @@
 
 #include "Math/Vectors.hpp"
 #include "Math/Matrix4x4.hpp"
+#include "Input.hpp"
 
 namespace Renderer {
     class Camera {
@@ -37,7 +38,8 @@ namespace Renderer {
         // Setters
         void set_position(const Math::Vector3 &position);
         void set_rotation(const Math::Vector3 &euler_degrees);
-        void look_at(const Math::Vector3 &target, const Math::Vector3 &up = Math::Vector3(0, 1, 0));
+        void look_at(const Math::Vector3 &target,
+                     Math::Vector3 (*up)() = Math::Vector3::up);
         void set_perspective(float fov_deg, float aspect_ratio, float near_plane, float far_plane);
         void set_orthographic(float size, float aspect_ratio, float near_plane, float far_plane);
         void set_projection_type(ProjectionType type) {
@@ -48,13 +50,16 @@ namespace Renderer {
         // Movement
         void translate(const Math::Vector3 &translation);
         void rotate(float pitch_deg, float yaw_deg, float roll_deg = 0.0f);
+
+        // Input
+        void update_from_input(float delta_time, const Input &input);
     private:
         // Camera state
-        Math::Vector3 position_ = Math::Vector3(0, 0, 0);
-        Math::Vector3 rotation_ = Math::Vector3(0, 0, 0); // Degrees
-        Math::Vector3 forward_ = Math::Vector3(0, 0, -1);
-        Math::Vector3 up_ = Math::Vector3(0, 1, 0);
-        Math::Vector3 right_ = Math::Vector3(1, 0, 0);
+        Math::Vector3 position_ = Math::Vector3::zero();
+        Math::Vector3 rotation_ = Math::Vector3::zero(); // Degrees
+        Math::Vector3 forward_ = Math::Vector3::forward();
+        Math::Vector3 up_ = Math::Vector3::up();
+        Math::Vector3 right_ = Math::Vector3::right();
 
         // Projection
         ProjectionType projection_type_ = ProjectionType::Perspective;
