@@ -8,8 +8,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download dependencies
-        run: choco install sdl2 sdl2_image sdl2_ttf sdl2_mixer opengl
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          .\vcpkg\bootstrap-vcpkg.bat
+            .\vcpkg\vcpkg.exe install sdl2 sdl2-image sdl2-ttf sdl2-mixer opengl:x64-windows
       - name: Configure cmake
-        run: cmake -B build
+        run: cmake -B build -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
       - name: Build
         run: cmake --build build --config Release
