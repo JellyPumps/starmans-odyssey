@@ -10,11 +10,17 @@ include_directories(${SDL2_INCLUDE_DIRS})
 #### SET SOURCES ####
 set(SOURCES
     src/main.cpp
-        src/Tools/Window.hpp
+        includes/Window.hpp
         src/Tools/Window.cpp
-        src/Tools/Input.hpp
+        includes/Input.hpp
         src/Tools/Input.cpp
+        includes/Math/Vectors.hpp
+        src/Rendering/Camera.cpp
+        includes/Rendering/Camera.hpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
 target_link_libraries(starmans_odyssey PRIVATE ${SDL2_LIBRARIES})
+
+#### SET INCLUDE DIRECTORIES ####
+target_include_directories(starmans_odyssey PRIVATE includes)
