@@ -33,7 +33,7 @@ namespace Math {
         // Static Factories
         static Matrix4x4 identity() { return {}; }
         static Matrix4x4 zero();
-        
+
         // Operations
         Matrix4x4 operator*(const Matrix4x4& other) const;
         Vector3 operator*(const Vector3& vector3) const;
