@@ -15,6 +15,9 @@ class Mesh;
 
 class Renderer {
 public:
+  Renderer(const Renderer&) = delete;
+  Renderer& operator=(const Renderer&) = delete;
+
   explicit Renderer(const class Window& window);
   ~Renderer();
 
