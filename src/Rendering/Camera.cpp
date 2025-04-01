@@ -104,7 +104,10 @@ namespace Renderer {
   // Input
   void Camera::update_from_input(float delta_time, const Input &input) {
     // Rotation
-    if ()
+    if (input.is_mouse_button_held(SDL_BUTTON_RIGHT)) {
+      const glm::vec2 mouse_delta = input.get_mouse_delta();
+      rotate(mouse_delta.y * mouse_sensitivity_, mouse_delta.x * mouse_sensitivity_, 0.0f);
+    }
   }
 
 } // Renderer
