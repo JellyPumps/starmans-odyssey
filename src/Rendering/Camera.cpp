@@ -19,7 +19,6 @@ Camera::Camera(const float fov_deg, const float aspect_ration,
 // Matrix updates
 void Camera::update_projection_matrices() {
   if (projection_type_ == ProjectionType::Perspective) {
-    // Perspective projection (Using FOV)
     float fov_rad = glm::radians(fov_);
     float cot_fov = 1.0f / std::tan(fov_rad / 2.0f);
 
@@ -27,12 +26,8 @@ void Camera::update_projection_matrices() {
     projection_[0][0] = cot_fov / aspect_ratio_;
     projection_[1][1] = cot_fov;
     projection_[2][2] = (far_plane_ + near_plane_) / (near_plane_ - far_plane_);
-    projection_[2][3] =
-        (2.0f * far_plane_ * near_plane_) / (near_plane_ - far_plane_);
+    projection_[2][3] = (2.0f * far_plane_ * near_plane_) / (near_plane_ - far_plane_);
     projection_[3][2] = -1.0f;
-  } else {
-    // Ortho
-    // Not implemented yet
   }
   view_projection_ = projection_ * view_;
   dirty_ = false;
@@ -40,7 +35,6 @@ void Camera::update_projection_matrices() {
 
 void Camera::update_view_matrices() {
   update_basis_vectors();
-
   view_ = lookAt(position_, position_ + forward_, up_);
   view_projection_ = projection_ * view_;
   dirty_ = false;

@@ -5,11 +5,17 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 #include <string>
 #include <unordered_map>
 
 class Shader {
 public:
+  static void GLAPIENTRY opengl_debug_callback(
+        GLenum source, GLenum type, GLuint id,
+        GLenum severity, GLsizei length,
+        const GLchar* message, const void* userParam);
+
   Shader() = default;
   Shader(const char* vertexPath, const char* fragmentPath);
   ~Shader();
@@ -51,13 +57,17 @@ public:
       }
     }
 
+  bool is_valid() const;
+  bool uniform_exists(const std::string &name) const;
+
   unsigned int get_id() const { return ID; }
+
+  int get_uniform_location(const std::string &name) const;
 
 private:
   unsigned int ID{};
   mutable std::unordered_map<std::string, int> uniform_location_cache;
 
-  int get_uniform_location(const std::string &name) const;
-  std::string read_file(const char* path) const;
+  static std::string read_file(const char* path) ;
   static void check_compile_errors(unsigned int shader, const std::string& type) ;
 };

@@ -17,42 +17,41 @@ Mesh::~Mesh() {
 }
 
 void Mesh::setup_mesh() {
-  // Create buffers/arrays
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &EBO);
 
   glBindVertexArray(VAO);
 
-  // Load data into vertex buffers
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
-               &indices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-  // Vertex Positions
+  // Position attribute
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                       (void*)offsetof(Vertex, Position));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));
 
-  // Vertex Normals
+  // Normal attribute
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                       (void*)offsetof(Vertex, Normal));
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 
-  // Vertex Texture Coords
+  // Texture coordinate attribute
   glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                       (void*)offsetof(Vertex, TexCoords));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 
-  glBindVertexArray(0);
+  glBindVertexArray(0); // Unbind VAO
 }
 
 void Mesh::draw() const {
+  if(VAO == 0 || indices.empty()) {
+    std::cerr << "Mesh not properly initialized!" << std::endl;
+    return;
+  }
+
   glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()),
+  glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()),
                 GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }

@@ -25,9 +25,12 @@ public:
 
   void draw() const;
 
+  // ---- Render Data ----
+  [[nodiscard]] unsigned int get_VAO() const { return VAO; }
+  [[nodiscard]] unsigned int get_VBO() const { return VBO; }
+  [[nodiscard]] unsigned int get_EBO() const { return EBO; }
 private:
   // ---- Render Data ----
   unsigned int VAO, VBO, EBO;
-
   void setup_mesh();
 };

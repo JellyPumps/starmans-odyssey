@@ -34,6 +34,7 @@ private:
   SDL_Window *window_;
   SDL_Surface *surface_;
   SDL_DisplayMode display_mode_{};
+  SDL_GLContext gl_context_;
 
   // Ints
   int width_;

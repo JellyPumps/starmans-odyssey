@@ -28,7 +28,7 @@ public:
   // ---- Frame Control ----
   static void begin_frame();
   void end_frame() const;
-  static void set_clear_color(const glm::vec4& color) ;
+  static void set_clear_color(const glm::vec4& color);
 
   // ---- Rendering ----
   void draw_mesh(const Mesh& mesh, const Shader& shader, const glm::mat4& model_matrix) const;
@@ -39,9 +39,9 @@ public:
   Shader* get_shader(const std::string& name) const;
 
   // ---- State Control ----
-  static void set_viewport(int x, int y, int width, int height) ;
-  static void enable_depth_testing(bool enable) ;
-  static void enable_wireframe_mode(bool enable) ;
+  static void set_viewport(int x, int y, int width, int height);
+  static void enable_depth_testing(bool enable);
+  static void enable_wireframe_mode(bool enable);
 
 private:
   bool initialized_ = false;
@@ -51,6 +51,6 @@ private:
 
   std::unordered_map<std::string, std::unique_ptr<Shader>> shaders_;
 
-  static void setup_opengl_state() ;
-  static void check_gl_errors(const char* operation) ;
+  static void setup_opengl_state();
+  static void check_gl_errors(const char* operation);
 };

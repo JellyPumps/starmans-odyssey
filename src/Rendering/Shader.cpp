@@ -8,6 +8,17 @@
 #include <iostream>
 #include "GL/glew.h"
 
+void Shader::GLAPIENTRY opengl_debug_callback(
+    GLenum source, GLenum type, GLuint id,
+    GLenum severity, GLsizei length,
+    const GLchar* message, const void* userParam)
+{
+    std::cerr << "GL CALLBACK: " << (type == GL_DEBUG_TYPE_ERROR ? "** ERROR **" : "")
+              << " type: 0x" << std::hex << type
+              << ", severity: 0x" << std::hex << severity
+              << ", message: " << message << std::endl;
+}
+
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
     std::string vertexCode = read_file(vertexPath);
     std::string fragmentCode = read_file(fragmentPath);
@@ -45,6 +56,17 @@ void Shader::compile(const char* vertexSource, const char* fragmentSource) {
 
 void Shader::use() const {
     glUseProgram(ID);
+}
+
+bool Shader::is_valid() const {
+    GLint status;
+    glValidateProgram(ID);
+    glGetProgramiv(ID, GL_VALIDATE_STATUS, &status);
+    return status == GL_TRUE;
+}
+
+bool Shader::uniform_exists(const std::string& name) const {
+    return glGetUniformLocation(ID, name.c_str()) != -1;
 }
 
 int Shader::get_uniform_location(const std::string &name) const {
@@ -96,7 +118,7 @@ void Shader::set_mat4(const std::string &name, const glm::mat4 &mat) const {
     glUniformMatrix4fv(get_uniform_location(name), 1, GL_FALSE, &mat[0][0]);
 }
 
-std::string Shader::read_file(const char* path) const {
+std::string Shader::read_file(const char* path) {
     std::string code;
     std::ifstream file;
 
