@@ -3,23 +3,31 @@
 */
 
 #pragma once
+
 #include <vector>
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 
 struct Vertex {
-  glm::vec3 position;
-  glm::vec3 normal;
-  glm::vec2 tex_coords;
+  glm::vec3 Position;
+  glm::vec3 Normal;
+  glm::vec2 TexCoords;
 };
 
 class Mesh {
 public:
+  // ---- Mesh Data ----
+  std::vector<Vertex> vertices;
+  std::vector<unsigned int> indices;
+
   Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
   ~Mesh();
 
   void draw() const;
 
 private:
+  // ---- Render Data ----
   unsigned int VAO, VBO, EBO;
-  size_t index_count;
+
+  void setup_mesh();
 };
