@@ -22,8 +22,6 @@ Window::Window(const char* title, const int width, const int height, const Uint3
     }
 
     surface_ = get_surface();
-
-    render();
 }
 
 Window::~Window() {
@@ -48,16 +46,8 @@ void Window::resize(const int width, const int height) {
     SDL_SetWindowSize(window_, width, height);
 }
 
-void Window::render() const {
-    SDL_FillRect(get_surface(), nullptr,
-        SDL_MapRGB(
-            get_surface()->format, 50, 50, 50
-        )
-    );
-}
-
-void Window::update() const {
-    SDL_UpdateWindowSurface(window_);
+void Window::swap_buffers() const {
+    SDL_GL_SwapWindow(window_);
 }
 
 // Getters

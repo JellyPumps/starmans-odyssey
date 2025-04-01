@@ -14,8 +14,7 @@ public:
   // Voids
   void toggle_fullscreen();
   void resize(int width, int height);
-  void render() const;
-  void update() const;
+  void swap_buffers() const;
 
   // SDL
   [[nodiscard]] SDL_Window *get_context() const;
