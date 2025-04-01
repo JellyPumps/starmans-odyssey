@@ -50,7 +50,7 @@ void Mesh::setup_mesh() {
   glBindVertexArray(0);
 }
 
-void Mesh::Draw() const {
+void Mesh::draw() const {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()),
                 GL_UNSIGNED_INT, 0);
