@@ -5,7 +5,14 @@ set(CMAKE_CXX_STANDARD 23)
 
 #### GET SDL2 ####
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+
+include_directories(
+        ${SDL2_INCLUDE_DIRS}
+        ${OPENGL_INCLUDE_DIR}
+        ${GLEW_INCLUDE_DIRS}
+)
 
 #### SET SOURCES ####
 set(SOURCES
@@ -14,15 +21,39 @@ set(SOURCES
         src/Tools/Window.cpp
         includes/Input.hpp
         src/Tools/Input.cpp
-        includes/Math/Vectors.hpp
         src/Rendering/Camera.cpp
         includes/Rendering/Camera.hpp
-        includes/Math/Matrix4x4.hpp
-        src/Tools/Math/Matrix4x4.cpp
+        includes/glm/common.hpp
+        includes/glm/exponential.hpp
+        includes/glm/ext.hpp
+        includes/glm/fwd.hpp
+        includes/glm/geometric.hpp
+        includes/glm/glm.cppm
+        includes/glm/integer.hpp
+        includes/glm/mat2x2.hpp
+        includes/glm/mat2x3.hpp
+        includes/glm/mat2x4.hpp
+        includes/glm/mat3x2.hpp
+        includes/glm/mat3x3.hpp
+        includes/glm/mat3x4.hpp
+        includes/glm/mat4x2.hpp
+        includes/glm/mat4x3.hpp
+        includes/glm/mat4x4.hpp
+        includes/glm/matrix.hpp
+        includes/glm/packing.hpp
+        includes/glm/trigonometric.hpp
+        includes/glm/vec2.hpp
+        includes/glm/vec3.hpp
+        includes/glm/vec4.hpp
+        includes/glm/vector_relational.hpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
-target_link_libraries(starmans_odyssey PRIVATE ${SDL2_LIBRARIES})
+target_link_libraries(starmans_odyssey PRIVATE
+        ${SDL2_LIBRARIES}
+        ${OPENGL_LIBRARIES}
+        ${GLEW_LIBRARIES}
+)
 
 #### SET INCLUDE DIRECTORIES ####
 target_include_directories(starmans_odyssey PRIVATE includes)
