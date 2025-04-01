@@ -23,16 +23,16 @@ public:
   bool is_init() const { return initialized_; }
 
   // ---- Frame Control ----
-  void begin_frame();
-  void end_frame();
-  void set_clear_color(const glm::vec4& color) const;
+  static void begin_frame();
+  void end_frame() const;
+  static void set_clear_color(const glm::vec4& color) ;
 
   // ---- Rendering ----
   void draw_mesh(const Mesh& mesh, const Shader& shader, const glm::mat4& model_matrix) const;
-  void sumbit_camera(const Camera& camera);
+  void submit_camera(const Camera& camera);
 
   // ---- Resource Control ----
-  void load_shader(const std::string& name, const std::string& vertex_path, const std::string& fragment_path);
+  void load_shader(const std::string& name, const char* vertex_path, const char* fragment_path);
   Shader* get_shader(const std::string& name) const;
 
   // ---- State Control ----
@@ -43,11 +43,11 @@ public:
 private:
   bool initialized_ = false;
   const class Window& window_;
-  glm::mat4 projection_matrix_;
-  glm::mat4 view_matrix_;
+  glm::mat4 projection_matrix_{};
+  glm::mat4 view_matrix_{};
 
   std::unordered_map<std::string, std::unique_ptr<Shader>> shaders_;
 
-  void setup_opengl_state();
+  void setup_opengl_state() const;
   void check_gl_errors(const char* operation) const;
 };
