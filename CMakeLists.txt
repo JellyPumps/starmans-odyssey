@@ -16,14 +16,14 @@ include_directories(${OPENGL_INCLUDE_DIR})
 set(SOURCES
         src/main.cpp
         libs/src/glad.c
-        src/Engine/src/Window.cpp
+        src/Engine/Window.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
 
 target_include_directories(starmans_odyssey PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/Engine/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs/include>
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/libs/include
         ${OPENGL_INCLUDE_DIR}
 )
 
