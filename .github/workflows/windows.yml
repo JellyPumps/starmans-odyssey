@@ -1,19 +1,28 @@
 name: Windows
 on: [push]
+
 jobs:
-  linux-build:
+  windows-build:
     name: Windows build
     runs-on: windows-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Download dependencies
+
+      - name: Set up vcpkg
         shell: pwsh
         run: |
           git clone https://github.com/microsoft/vcpkg.git
           .\vcpkg\bootstrap-vcpkg.bat
-            .\vcpkg\vcpkg.exe install sdl2 sdl2-image sdl2-ttf sdl2-mixer opengl:x64-windows
-      - name: Configure cmake
+
+      - name: Install dependencies with vcpkg
+        shell: pwsh
+        run: |
+          .\vcpkg\vcpkg.exe install glfw3 glew glm --triplet x64-windows
+          echo "VCPKG_ROOT=$env:GITHUB_WORKSPACE\vcpkg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+
+      - name: Configure CMake
         run: cmake -B build -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
+
       - name: Build
         run: cmake --build build --config Release

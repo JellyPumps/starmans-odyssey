@@ -1,14 +1,16 @@
 name: MacOS
 on: [push]
 jobs:
-  linux-build:
+  macos-build:
     name: MacOS build
     runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download dependencies
-        run: brew install sdl2 sdl2_image sdl2_ttf sdl2_mixer
+        run: |
+          brew update
+          brew install cmake glfw glew glm
       - name: Configure cmake
         run: cmake -B build
       - name: Build
