@@ -28,6 +28,29 @@ public:
   void set_mat3(const std::string &name, const glm::mat3 &mat) const;
   void set_mat4(const std::string &name, const glm::mat4 &mat) const;
 
+  template<typename T>
+  void set_uniform(const std::string &name, const T& value) const {
+      if constexpr (std::is_same_v<T, bool>) {
+        set_bool(name, value);
+      } else if constexpr (std::is_same_v<T, int>) {
+        set_int(name, value);
+      } else if constexpr (std::is_same_v<T, float>) {
+        set_float(name, value);
+      } else if constexpr (std::is_same_v<T, glm::vec2>) {
+        set_vec2(name, value);
+      } else if constexpr (std::is_same_v<T, glm::vec3>) {
+        set_vec3(name, value);
+      } else if constexpr (std::is_same_v<T, glm::vec4>) {
+        set_vec4(name, value);
+      } else if constexpr (std::is_same_v<T, glm::mat2>) {
+        set_mat2(name, value);
+      } else if constexpr (std::is_same_v<T, glm::mat3>) {
+        set_mat3(name, value);
+      } else if constexpr (std::is_same_v<T, glm::mat4>) {
+        set_mat4(name, value);
+      }
+    }
+
   unsigned int get_id() const { return ID; }
 
 private:
