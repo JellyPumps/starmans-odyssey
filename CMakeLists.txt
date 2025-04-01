@@ -46,6 +46,12 @@ set(SOURCES
         includes/glm/vec3.hpp
         includes/glm/vec4.hpp
         includes/glm/vector_relational.hpp
+        src/Rendering/Renderer.cpp
+        includes/Rendering/Renderer.hpp
+        includes/Rendering/Shader.hpp
+        includes/Rendering/Mesh.hpp
+        src/Rendering/Shader.cpp
+        src/Rendering/Mesh.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
@@ -57,3 +63,4 @@ target_link_libraries(starmans_odyssey PRIVATE
 
 #### SET INCLUDE DIRECTORIES ####
 target_include_directories(starmans_odyssey PRIVATE includes)
+target_include_directories(starmans_odyssey PRIVATE assets)
