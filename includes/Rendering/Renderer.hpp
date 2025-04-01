@@ -36,9 +36,9 @@ public:
   Shader* get_shader(const std::string& name) const;
 
   // ---- State Control ----
-  void set_viewport(int x, int y, int width, int height) const;
-  void enable_depth_testing(bool enable) const;
-  void enable_wireframe_mode(bool enable) const;
+  static void set_viewport(int x, int y, int width, int height) ;
+  static void enable_depth_testing(bool enable) ;
+  static void enable_wireframe_mode(bool enable) ;
 
 private:
   bool initialized_ = false;
@@ -48,6 +48,6 @@ private:
 
   std::unordered_map<std::string, std::unique_ptr<Shader>> shaders_;
 
-  void setup_opengl_state() const;
-  void check_gl_errors(const char* operation) const;
+  static void setup_opengl_state() ;
+  static void check_gl_errors(const char* operation) ;
 };
