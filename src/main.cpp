@@ -3,6 +3,7 @@
 * Entry point
 */
 
+<<<<<<< Updated upstream
 #include "Window.hpp"
 #include "Input.hpp"
 #include "Rendering/Renderer.hpp"
@@ -11,6 +12,9 @@
 #include "Rendering/Shader.hpp"
 #include <SDL2/SDL.h>
 #include <glm/gtc/matrix_transform.hpp>
+=======
+#include <GLFW/glfw3.h>
+>>>>>>> Stashed changes
 
 int main() {
     Window window("SDL2 Window", 800, 600, SDL_WINDOW_SHOWN);
