@@ -1,5 +1,4 @@
-# Assets & Build Files
-assets/
+# Build Files
 cmake-build-debug/
 
 # Editor / OS Specific Files
