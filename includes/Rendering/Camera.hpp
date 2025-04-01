@@ -6,6 +6,8 @@
 
 #include "Input.hpp"
 #include "glm/glm.hpp"
+#include "glm/gtc/quaternion.hpp"
+#include "glm/gtx/quaternion.hpp"
 
 namespace Renderer {
     class Camera {
@@ -17,7 +19,9 @@ namespace Renderer {
 
         Camera(float fov_deg = 60.0f, float aspect_ration = 16.0f/9.0f, float near_plane = 0.1f, float far_plane = 1000.0f);
 
-        void update_matrices();
+        // Matrix updates
+        void update_view_matrices();
+        void update_projection_matrices();
 
         // Getters
         [[nodiscard]] glm::mat4x4 get_view_matrix() const { return view_; }
@@ -25,14 +29,23 @@ namespace Renderer {
         [[nodiscard]] glm::mat4x4 get_view_projection_matrix() const { return view_projection_; }
 
         [[nodiscard]] glm::vec3 get_position() const { return position_; }
-        [[nodiscard]] glm::vec3 get_rotation() const { return rotation_; }
+        [[nodiscard]] glm::quat get_rotation() const { return orientation_; }
         [[nodiscard]] glm::vec3 get_forward() const { return forward_; }
         [[nodiscard]] glm::vec3 get_up() const { return up_; }
         [[nodiscard]] glm::vec3 get_right() const { return right_; }
+        [[nodiscard]] static glm::vec3 get_world_up() { return {0, 1, 0}; }
 
         [[nodiscard]] float get_fov() const { return fov_; }
         [[nodiscard]] float get_near_plane() const { return near_plane_; }
         [[nodiscard]] float get_far_plane() const { return far_plane_; }
+
+        [[nodiscard]] glm::mat4x4 get_view_proj_matrix() {
+            if (dirty_) {
+                update_view_matrices();
+                update_projection_matrices();
+            }
+            return view_projection_;
+        }
 
         // Setters
         void set_position(const glm::vec3 &position);
@@ -42,6 +55,10 @@ namespace Renderer {
         void set_orthographic(float size, float aspect_ratio, float near_plane, float far_plane);
         void set_projection_type(ProjectionType type) {
             projection_type_ = type;
+            dirty_ = true;
+        }
+        void set_aspect_ratio(float aspect_ratio) {
+            aspect_ratio_ = aspect_ratio;
             dirty_ = true;
         }
 
@@ -54,8 +71,8 @@ namespace Renderer {
     private:
         // Camera state
         glm::vec3 position_ = glm::vec3(0, 0, 0);
-        glm::vec3 rotation_ = glm::vec3(0, 0, 0); // Degrees
-        glm::vec3 forward_ = glm::vec3(0, 0, 1);
+        glm::quat orientation_; // Quaternion for rotation
+        glm::vec3 forward_ = glm::vec3(0, 0, -1);
         glm::vec3 up_ = glm::vec3(0, 1, 0);
         glm::vec3 right_ = glm::vec3(1, 0, 0);
 
