@@ -21,19 +21,12 @@ include_directories(
 #### SET SOURCES ####
 set(SOURCES
         src/main.cpp
-        src/Tools/Window.cpp
-        src/Tools/Input.cpp
-        src/Rendering/Camera.cpp
-        src/Rendering/Renderer.cpp
-        src/Rendering/Shader.cpp
-        src/Rendering/Mesh.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
 
 target_include_directories(starmans_odyssey PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/includes
-        ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        ${CMAKE_CURRENT_SOURCE_DIR}/Engine/include
         ${SDL2_INCLUDE_DIRS}
         ${OPENGL_INCLUDE_DIR}
         ${GLEW_INCLUDE_DIRS}
