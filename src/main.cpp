@@ -5,8 +5,10 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <vector>
 #include "Window.hpp"
 #include "Shader.hpp"
+#include "Mesh.hpp"
 
 
 int main() {
@@ -16,39 +18,18 @@ int main() {
   // ---- Shaders ----
   const STARBORN::Shader shader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 
-  // ---- Triangle ----
-  constexpr float vertices[] = {
-    -0.5f, -0.5f, 0.0f, // Bottom Left
-     0.5f, -0.5f, 0.0f, // Bottom Right
-     0.0f,  0.5f, 0.0f  // Top
+  // ---- Mesh ----
+  const std::vector vertices = {
+      -0.5f, -0.5f, 0.0f, // Bottom-left
+      0.5f,  -0.5f, 0.0f, // Bottom-right
+      0.0f,  0.5f,  0.0f  // Top
   };
 
-  unsigned int indices[] = {
-    0, 1, 3
+  const std::vector<unsigned int> indices = {
+    0, 1, 2
   };
 
-  unsigned int vertex_buffer_object;
-  unsigned int vertex_array_object;
-  unsigned int element_buffer_object;
-
-  glGenVertexArrays(1, &vertex_array_object);
-  glGenBuffers(1, &vertex_buffer_object);
-  glGenBuffers(1, &element_buffer_object);
-
-  glBindVertexArray(vertex_array_object);
-
-  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_object);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-  // ---- Linking Vertex Attributes ----
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), static_cast<void *>(nullptr));
-  glEnableVertexAttribArray(0);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
+  const STARBORN::Mesh triangle(vertices, indices);
 
   // ---- Main Loop ----
   while (!glfwWindowShouldClose(window.get_window())) {
@@ -59,18 +40,12 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     shader.use();
-    glBindVertexArray(vertex_array_object);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    triangle.draw();
 
     // ---- Event Polling ----
     glfwSwapBuffers(window.get_window());
     glfwPollEvents();
   }
-
-  // ---- Cleanup ----
-  glDeleteVertexArrays(1, &vertex_array_object);
-  glDeleteBuffers(1, &vertex_buffer_object);
-  glDeleteBuffers(1, &element_buffer_object);
 
   glfwTerminate();
   return 0;
