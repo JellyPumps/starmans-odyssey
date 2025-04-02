@@ -4,8 +4,6 @@
 
 #include "Shader.hpp"
 
-#include <bits/fs_fwd.h>
-
 namespace STARBORN {
 
   // ---- Constructor & Destructor ----
