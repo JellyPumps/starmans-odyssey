@@ -15,12 +15,14 @@ namespace STARBORN {
 
 class Shader {
 private:
-  static std::string read_shader_file(const char *file_path);
+  std::string read_shader_file(const char *file_path) const;
   static unsigned int compile_shader(const char *shader_code, GLenum shader_type);
   void create_shader_program(unsigned int vertex, unsigned int fragment);
+  static bool ends_with(const std::string& str, const std::string& suffix);
 public:
   // ---- Variables ----
   unsigned int ID{};
+  std::string SHADER_FAIL = "FAIL";
 
   // ---- Constructor & Destructor ----
   Shader(const char* vertex_path, const char* fragment_path);
