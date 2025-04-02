@@ -24,7 +24,7 @@ public:
 
   // ---- Constructor & Destructor ----
   Shader(const char* vertex_path, const char* fragment_path);
-  ~Shader() = default;
+  ~Shader();
 
   // --- Activate Shader ----
   void use() const { glUseProgram(ID); };

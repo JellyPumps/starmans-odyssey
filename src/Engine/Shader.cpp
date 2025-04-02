@@ -25,6 +25,11 @@ namespace STARBORN {
     create_shader_program(vertex, fragment);
   }
 
+  Shader::~Shader() {
+    // ---- Delete Shader Program ----
+    glDeleteProgram(ID);
+  }
+
   std::string Shader::read_shader_file(const char *file_path) {
     std::string file_contents;
     std::ifstream shader_file;
