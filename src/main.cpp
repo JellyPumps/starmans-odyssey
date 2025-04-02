@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Window.hpp"
+#include "Shader.hpp"
 
 
 int main() {
@@ -13,39 +14,7 @@ int main() {
   STARBORN::Window window(800, 600, "Starman's Odyssey");
 
   // ---- Shaders ----
-  const char *vertex_shader_source = "#version 330 core \n"
-                                     "layout (location = 0) in vec3 aPos; \n"
-                                     "void main() {\n"
-                                     "  gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0); \n"
-                                     "}\0";
-
-  unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-
-  glShaderSource(vertex_shader, 1, &vertex_shader_source, nullptr);
-  glCompileShader(vertex_shader);
-
-  const char *fragment_shader_source = "#version 330 core \n"
-                                       "out vec4 FragColor; \n"
-                                       "void main() {\n"
-                                       "  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f); \n"
-                                       "}\0";
-
-  unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragment_shader, 1, &fragment_shader_source, nullptr);
-  glCompileShader(fragment_shader);
-
-  // ---- Shader Program ----
-  unsigned int shader_program = glCreateProgram();
-
-  glAttachShader(shader_program, vertex_shader);
-  glAttachShader(shader_program, fragment_shader);
-  glLinkProgram(shader_program);
-
-  glUseProgram(shader_program);
-
-  // ---- Delete Shaders ----
-  glDeleteShader(vertex_shader);
-  glDeleteShader(fragment_shader);
+  const STARBORN::Shader shader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 
   // ---- Triangle ----
   constexpr float vertices[] = {
@@ -89,7 +58,7 @@ int main() {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shader_program);
+    shader.use();
     glBindVertexArray(vertex_array_object);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
@@ -102,7 +71,6 @@ int main() {
   glDeleteVertexArrays(1, &vertex_array_object);
   glDeleteBuffers(1, &vertex_buffer_object);
   glDeleteBuffers(1, &element_buffer_object);
-  glDeleteProgram(shader_program);
 
   glfwTerminate();
   return 0;
