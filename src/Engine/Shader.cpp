@@ -10,9 +10,18 @@ namespace STARBORN {
 
   // ---- Constructor & Destructor ----
   Shader::Shader(const char *vertex_path, const char *fragment_path) {
-    // ---- Retrieve Vertex & Fragment Source Code ----
-    const std::string vertex_code = read_shader_file(vertex_path);
-    const std::string fragment_code = read_shader_file(fragment_path);
+    std::string vertex_code;
+    std::string fragment_code;
+
+    try {
+      // ---- Retrieve Vertex & Fragment Source Code ----
+      vertex_code = read_shader_file(vertex_path);
+      fragment_code = read_shader_file(fragment_path);
+    } catch (const std::ifstream::failure &e) {
+      std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ, FALLING BACK TO DEFAULT SHADERS" << std::endl;
+      vertex_code = read_shader_file("shaders/basic.vert");
+      fragment_code = read_shader_file("shaders/basic.frag");
+    }
 
     const char* vshader = vertex_code.c_str();
     const char* fshader = fragment_code.c_str();
