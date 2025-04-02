@@ -17,6 +17,7 @@ set(SOURCES
         src/main.cpp
         libs/src/glad.c
         src/Engine/Window.cpp
+        src/Engine/Shader.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
