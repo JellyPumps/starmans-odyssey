@@ -9,9 +9,7 @@
 #include "Window.hpp"
 #include "Shader.hpp"
 #include "Mesh.hpp"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "Texture.hpp"
 
 
 int main() {
@@ -35,41 +33,13 @@ int main() {
     1, 2, 3
   };
 
-  const STARBORN::Mesh triangle(vertices, indices);
+  const STARBORN::Mesh mesh(vertices, indices);
 
   // ---- Textures ----
-
-  // ---- Load and Generate Texture ----
-  unsigned int texture;
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-
-  // ---- Texture Wrapping ----
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-  // ---- Texture Filtering ----
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  // ---- Mipmapping ----
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  int width, height, nrChannels;
-  unsigned char *data = stbi_load("assets/textures/container.jpg", &width, &height, &nrChannels, 0);
-
-  if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  } else {
-    throw std::runtime_error("Failed to load texture");
-  }
-
-  stbi_image_free(data);
+  const STARBORN::Texture texture("assets/textures/container.jpg");
 
   shader.use();
-  shader.set_int("texture", 0);
+  STARBORN::Texture::opengl_sampler(shader);
 
   // ---- Main Loop ----
   while (!glfwWindowShouldClose(window.get_window())) {
@@ -79,12 +49,9 @@ int main() {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // ---- Bind Texture ----
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
+    texture.bind();
     shader.use();
-    triangle.draw();
+    mesh.draw();
 
     // ---- Event Polling ----
     glfwSwapBuffers(window.get_window());
