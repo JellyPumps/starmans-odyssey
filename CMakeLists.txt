@@ -19,6 +19,8 @@ set(SOURCES
         src/Engine/Window.cpp
         src/Engine/Shader.cpp
         src/Engine/Mesh.cpp
+        src/Engine/Texture.cpp
+        include/Texture.hpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
