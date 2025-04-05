@@ -19,13 +19,14 @@ private:
 
   std::vector<float> vertices_;
   std::vector<unsigned int> indices_;
+  bool use_indices_{false};
 
   // ---- Private Methods ----
   void generate_buffers();
   static void link_vertex_attributes();
 public:
   // ---- Constructor & Destructor ----
-  Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices);
+  explicit Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices = {});
   ~Mesh();
 
   // ---- Methods ----

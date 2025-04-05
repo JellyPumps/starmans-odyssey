@@ -7,7 +7,7 @@
 namespace STARBORN {
   // ---- Constructor & Destructor ----
   Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
-  : vertices_(vertices), indices_(indices) {
+  : vertices_(vertices), indices_(indices), use_indices_(!indices.empty()) {
     // ---- Generate Buffers ----
     generate_buffers();
 
@@ -18,10 +18,12 @@ namespace STARBORN {
       static_cast<GLsizeiptr>(vertices_.size() * sizeof(float)),
       vertices_.data(), GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-      static_cast<GLsizeiptr>(indices_.size() * sizeof(unsigned int)),
-      indices_.data(), GL_STATIC_DRAW);
+    if (use_indices_) {
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+        static_cast<GLsizeiptr>(indices_.size() * sizeof(unsigned int)),
+        indices_.data(), GL_STATIC_DRAW);
+    }
 
     // ---- Link Vertex Attributes ----
     link_vertex_attributes();
@@ -60,7 +62,12 @@ namespace STARBORN {
   // ---- Draw ----
   void Mesh::draw() const {
     glBindVertexArray(vertex_array_object_);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+    if (use_indices_) {
+      glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices_.size()), GL_UNSIGNED_INT, nullptr);
+    } else {
+      glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_.size() / 8));
+    }
   }
 
 } // STARBORN
