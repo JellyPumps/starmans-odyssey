@@ -20,7 +20,7 @@ set(SOURCES
         src/Engine/Shader.cpp
         src/Engine/Mesh.cpp
         src/Engine/Texture.cpp
-        include/Texture.hpp
+        src/Engine/Camera.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
