@@ -113,6 +113,7 @@ int main() {
     model = translate(model, cube_positions[0]);
     model = rotate(model, static_cast<float>(glfwGetTime()) * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     shader.set_mat4("model", model);
+    
     mesh.draw();
 
     // ---- Event Polling ----
