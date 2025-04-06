@@ -21,6 +21,7 @@ set(SOURCES
         src/Engine/Mesh.cpp
         src/Engine/Texture.cpp
         src/Engine/Camera.cpp
+        src/Engine/Input.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
