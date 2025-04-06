@@ -27,5 +27,14 @@ namespace STARBORN {
     [[nodiscard]] glm::mat4 get_projection_matrix() const;
     [[nodiscard]] glm::vec3 get_position() const { return position_; };
     [[nodiscard]] glm::vec3 get_direction() const { return direction_; };
+    [[nodiscard]] glm::vec3 get_up() const { return up_; };
+    [[nodiscard]] glm::vec3 get_right() const { return right_; };
+    [[nodiscard]] glm::vec3 get_camera_up() const { return camera_up_; };
+    [[nodiscard]] glm::vec3 get_target() const { return target_; };
+
+    // ---- Setters ----
+    void set_position(const glm::vec3& position) { position_ = position; };
+    void set_direction(const glm::vec3& direction) { direction_ = direction; };
+    void set_target(const glm::vec3& target) { target_ = target; };
   };
 } // STARBORN
