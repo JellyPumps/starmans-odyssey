@@ -4,11 +4,11 @@
 
 #pragma once
 
+#include "Shader.hpp"
+#include "Texture.hpp"
+#include <glm/glm.hpp>
 #include <memory>
 #include <vector>
-#include <glm/glm.hpp>
-#include "Texture.hpp"
-#include "Shader.hpp"
 
 namespace STARBORN {
   class Material {

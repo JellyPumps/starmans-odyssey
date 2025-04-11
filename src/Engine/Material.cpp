@@ -2,7 +2,7 @@
  * Created by Sarthak Rai on 11 Apr 2025.
 */
 
-#include "Material.hpp"
+#include "../../include/Material.hpp"
 
 namespace STARBORN {
   void Material::apply(const Shader& shader) const {
