@@ -12,6 +12,7 @@
 #include "Mesh.hpp"
 #include "Texture.hpp"
 #include <string>
+#include "Material.hpp"
 
 namespace STARBORN {
 
@@ -19,6 +20,7 @@ class Model {
 public:
   std::vector<std::shared_ptr<Mesh>> meshes_;
   std::vector<std::shared_ptr<Texture>> textures_;
+  std::vector<std::shared_ptr<Material>> materials_;
   glm::mat4 transform_{1.0f};
 
   // ---- Draw ----

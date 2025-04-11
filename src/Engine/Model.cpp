@@ -9,7 +9,13 @@ namespace STARBORN {
   void Model::draw(const Shader &shader) const {
     shader.set_mat4("model", transform_);
     for (const auto &mesh : meshes_) {
-      if (!textures_.empty()) { textures_[0]->bind(); }
+      // ---- Apply Material ----
+      if (mesh->material_index >= 0 && mesh->material_index < materials_.size()) {
+        materials_[mesh->material_index]->apply(shader);
+      } else if (!textures_.empty()) {
+        textures_[0]->bind();
+      }
+      
       mesh->draw();
     }
   }
