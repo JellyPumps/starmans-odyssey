@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include <tiny_gltf.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <vector>
-#include <memory>
+#include "Material.hpp"
 #include "Mesh.hpp"
 #include "Texture.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <memory>
 #include <string>
-#include "Material.hpp"
+#include <tiny_gltf.h>
+#include <vector>
 
 namespace STARBORN {
 
