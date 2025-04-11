@@ -4,10 +4,22 @@
 #include <stdexcept>
 
 namespace STARBORN {
+  // ---- Constructors & Destructor ----
   Texture::Texture(const char *filepath) {
     glGenTextures(1, &texture_id_);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
     generate_texture(filepath);
+    setup_texture();
+  }
+
+  Texture::Texture(const unsigned char* data, int width, int height, int channels) {
+    glGenTextures(1, &texture_id_);
+    glBindTexture(GL_TEXTURE_2D, texture_id_);
+
+    const GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
     setup_texture();
   }
 

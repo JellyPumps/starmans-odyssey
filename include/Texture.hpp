@@ -21,6 +21,7 @@ namespace STARBORN {
     static void generate_texture(const char *filepath);
   public:
     explicit Texture(const char *filepath);
+    Texture(const unsigned char* data, int width, int height, int channels);
     ~Texture();
 
     // ---- Methods ----
