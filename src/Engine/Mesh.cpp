@@ -43,17 +43,20 @@ namespace STARBORN {
   }
 
   void Mesh::link_vertex_attributes() {
-    // ---- Position Attribute ----
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), static_cast<void *>(nullptr));
-    glEnableVertexAttribArray(0);
+    // POSITION (3), COLOR (3), NORMAL (3), TEXCOORD (2)
+    const GLsizei stride = 11 * sizeof(float);
 
-    // ---- Color Attribute ----
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void *>(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, static_cast<void *>(0));
+    glEnableVertexAttribArray(0);  // Position
 
-    // ---- Texture Coordinate Attribute ----
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void *>(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void *>(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);  // Color
+
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void *>(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);  // Normal
+
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void *>(9 * sizeof(float)));
+    glEnableVertexAttribArray(3);  // TexCoord
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
