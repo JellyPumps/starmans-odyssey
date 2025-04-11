@@ -11,8 +11,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
 #include <string>
-#include <tiny_gltf.h>
 #include <vector>
+#include <tiny_gltf.h>
+
 
 namespace STARBORN {
 

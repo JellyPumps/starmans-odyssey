@@ -4,6 +4,10 @@
 
 #include "Model.hpp"
 
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <tiny_gltf.h>
+
 namespace STARBORN {
   // ---- Draw ----
   void Model::draw(const Shader &shader) const {
