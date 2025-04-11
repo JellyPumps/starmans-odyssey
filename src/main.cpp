@@ -8,8 +8,7 @@
 #include <vector>
 #include "Window.hpp"
 #include "Shader.hpp"
-#include "Mesh.hpp"
-#include "Texture.hpp"
+#include "Model.hpp"
 #include "Input.hpp"
 #include "Player.hpp"
 
@@ -31,77 +30,11 @@ int main() {
   glEnable(GL_DEPTH_TEST);
   const STARBORN::Shader shader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 
-  // ---- Mesh ----
-  const std::vector vertices = {
-    // positions          // colors           // texture coords
-    -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-
-    -0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-
-    -0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-
-     0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-
-    -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-
-    -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f
-  };
-
-  std::vector cube_positions = {
-    glm::vec3( 0.0f,  0.0f,  0.0f),
-    glm::vec3( 2.0f,  5.0f, -15.0f),
-    glm::vec3(-1.5f, -2.2f, -2.5f),
-    glm::vec3(-3.8f, -2.0f, -12.3f),
-    glm::vec3 (2.4f, -0.4f, -3.5f),
-    glm::vec3(-1.7f,  3.0f, -7.5f),
-    glm::vec3( 1.3f, -2.0f, -2.5f),
-    glm::vec3( 1.5f,  2.0f, -2.5f),
-    glm::vec3( 1.5f,  0.2f, -1.5f),
-    glm::vec3(-1.3f,  1.0f, -1.5f)
-  };
-
-  const STARBORN::Mesh mesh(vertices);
-
-  // ---- Textures ----
-  const STARBORN::Texture texture("assets/textures/test_image_2.jpg");
-
-  shader.use();
-  STARBORN::Texture::opengl_sampler(shader);
-
-  shader.set_mat4("projection", camera->get_projection_matrix());
+  // ---- Load Model ----
+  std::shared_ptr<STARBORN::Model> model = STARBORN::ModelLoader::load_model(
+    "assets/models/test_models/test_surface.glb");
 
   float last_frame = 0.0f;
-
   // ---- Main Loop ----
   while (!glfwWindowShouldClose(window.get_window())) {
     // ---- Time ----
@@ -118,22 +51,35 @@ int main() {
     player.update(delta_time);
 
     // ---- Rendering ----
-    glClearColor(0.0f, 181.0f / 255.0f, 226.0f / 255.0f, 1.0f);
+    glClearColor(40.0f / 255.0f, 30.0f / 255.0f, 60.0f / 255.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    texture.bind();
     shader.use();
 
     // ---- Transformation ----
+    shader.set_mat4("projection", camera->get_projection_matrix());
     shader.set_mat4("view", player.get_camera()->get_view_matrix());
 
-    // ---- Draw ----
-    for (auto cube_position : cube_positions) {
-      auto model = glm::mat4(1.0f);
-      model = translate(model, cube_position);
-      shader.set_mat4("model", model);
-      mesh.draw();
+    // ---- Lighting ----
+    std::vector<glm::vec3> lightPositions = {
+      glm::vec3(1.2f, 1.0f, 2.0f),
+      glm::vec3(-1.2f, 1.0f, 2.0f)
+    };
+    std::vector<glm::vec3> lightColors = {
+      glm::vec3(1.0f, 1.0f, 1.0f),
+      glm::vec3(0.8f, 0.8f, 0.8f)
+    };
+
+    for (size_t i = 0; i < lightPositions.size(); ++i) {
+      shader.set_vec3("uLightPositions[" + std::to_string(i) + "]", lightPositions[i]);
+      shader.set_vec3("uLightColors[" + std::to_string(i) + "]", lightColors[i]);
     }
+    shader.set_int("uLightCount", static_cast<int>(lightPositions.size()));
+
+    // ---- Draw ----
+    glm::mat4 model_matrix = glm::mat4(1.0f);
+    shader.set_mat4("model", model_matrix);
+    model->draw(shader);
 
     // ---- Event Polling ----
     glfwSwapBuffers(window.get_window());
