@@ -15,13 +15,13 @@ namespace STARBORN {
       } else if (!textures_.empty()) {
         textures_[0]->bind();
       }
-      
+
       mesh->draw();
     }
   }
 
   // ---- Model Loading ----
-  std::shared_ptr<Model> ModelLoader::load_model(const std::string &path) {
+ std::shared_ptr<Model> ModelLoader::load_model(const std::string &path) {
     std::string err, warn;
     tinygltf::TinyGLTF loader;
     tinygltf::Model gltf_model;
@@ -41,6 +41,95 @@ namespace STARBORN {
 
     auto model = std::make_shared<Model>();
 
+    // ---- Process Textures ----
+    std::vector<std::shared_ptr<Texture>> texture_cache;
+    for (const auto &image : gltf_model.images) {
+      auto texture_ptr = std::make_shared<Texture>(
+        image.image.data(),
+        image.width,
+        image.height,
+        image.component
+      );
+      texture_cache.push_back(texture_ptr);
+    }
+
+    // ---- Process Materials ----
+    for (const auto &material : gltf_model.materials) {
+      auto mat = std::make_shared<Material>();
+
+      // Process base material properties
+      const auto &pbr = material.pbrMetallicRoughness;
+
+      // Base color
+      mat->base_color = glm::vec4(
+        pbr.baseColorFactor[0],
+        pbr.baseColorFactor[1],
+        pbr.baseColorFactor[2],
+        pbr.baseColorFactor[3]
+      );
+
+      // Metallic/roughness
+      mat->metallic = static_cast<float>(pbr.metallicFactor);
+      mat->roughness = static_cast<float>(pbr.roughnessFactor);
+
+      // Emissive factor
+      if (material.emissiveFactor.size() >= 3) {
+        mat->emissive_factor = glm::vec3(
+          material.emissiveFactor[0],
+          material.emissiveFactor[1],
+          material.emissiveFactor[2]
+        );
+      }
+
+      // Alpha mode
+      if (material.alphaMode == "BLEND") {
+        mat->alpha_mode = Material::AlphaMode::BLEND;
+      } else if (material.alphaMode == "MASK") {
+        mat->alpha_mode = Material::AlphaMode::MASK;
+        mat->alpha_cutoff = static_cast<float>(material.alphaCutoff);
+      }
+
+      mat->double_sided = material.doubleSided;
+
+      // Process textures
+      if (pbr.baseColorTexture.index >= 0) {
+        const auto &texture = gltf_model.textures[pbr.baseColorTexture.index];
+        if (texture.source >= 0 && texture.source < texture_cache.size()) {
+          mat->base_color_texture = texture_cache[texture.source];
+        }
+      }
+
+      if (pbr.metallicRoughnessTexture.index >= 0) {
+        const auto &texture = gltf_model.textures[pbr.metallicRoughnessTexture.index];
+        if (texture.source >= 0 && texture.source < texture_cache.size()) {
+          mat->metallic_roughness_texture = texture_cache[texture.source];
+        }
+      }
+
+      if (material.normalTexture.index >= 0) {
+        const auto &texture = gltf_model.textures[material.normalTexture.index];
+        if (texture.source >= 0 && texture.source < texture_cache.size()) {
+          mat->normal_texture = texture_cache[texture.source];
+        }
+      }
+
+      if (material.occlusionTexture.index >= 0) {
+        const auto &texture = gltf_model.textures[material.occlusionTexture.index];
+        if (texture.source >= 0 && texture.source < texture_cache.size()) {
+          mat->occlusion_texture = texture_cache[texture.source];
+        }
+      }
+
+      if (material.emissiveTexture.index >= 0) {
+        const auto &texture = gltf_model.textures[material.emissiveTexture.index];
+        if (texture.source >= 0 && texture.source < texture_cache.size()) {
+          mat->emissive_texture = texture_cache[texture.source];
+        }
+      }
+
+      model->materials_.push_back(mat);
+    }
+
     // ---- Process Meshes ----
     for (const auto &mesh : gltf_model.meshes) {
       for (const auto &primitive : mesh.primitives) {
@@ -49,21 +138,9 @@ namespace STARBORN {
       }
     }
 
-    // ---- Process Textures ----
-    for (const auto &texture : gltf_model.textures) {
-      if (texture.source >= 0 && texture.source < gltf_model.images.size()) {
-        const auto &image = gltf_model.images[texture.source];
-
-        // ---- Create Texture ----
-        auto texture_ptr = std::make_shared<Texture>(
-          image.image.data(),
-          image.width,
-          image.height,
-          image.component
-        );
-
-        model->textures_.push_back(texture_ptr);
-      }
+    // ---- Compatibility ----
+    if (!texture_cache.empty()) {
+      model->textures_ = texture_cache;
     }
 
     return model;
