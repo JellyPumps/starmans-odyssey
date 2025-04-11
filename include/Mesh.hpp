@@ -34,6 +34,8 @@ public:
   [[nodiscard]] unsigned int get_vertex_buffer_object() const { return vertex_buffer_object_; }
   [[nodiscard]] unsigned int get_vertex_array_object() const { return vertex_array_object_; }
   [[nodiscard]] unsigned int get_element_buffer_object() const { return element_buffer_object_; }
+
+  int material_index{-1};
 };
 
 } // STARBORN
