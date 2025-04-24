@@ -34,6 +34,12 @@ int main() {
   std::shared_ptr<STARBORN::Model> model = STARBORN::ModelLoader::load_model(
     "assets/models/test_models/test_surface.glb");
 
+  // ---- Disable VSync ----
+  glfwSwapInterval(0);
+
+  // ---- Create Matrix ----
+  auto model_matrix = glm::mat4(1.0f);
+
   float last_frame = 0.0f;
   // ---- Main Loop ----
   while (!glfwWindowShouldClose(window.get_window())) {
@@ -60,24 +66,7 @@ int main() {
     shader.set_mat4("projection", camera->get_projection_matrix());
     shader.set_mat4("view", player.get_camera()->get_view_matrix());
 
-    // ---- Lighting ----
-    std::vector<glm::vec3> lightPositions = {
-      glm::vec3(1.2f, 1.0f, 2.0f),
-      glm::vec3(-1.2f, 1.0f, 2.0f)
-    };
-    std::vector<glm::vec3> lightColors = {
-      glm::vec3(1.0f, 1.0f, 1.0f),
-      glm::vec3(0.8f, 0.8f, 0.8f)
-    };
-
-    for (size_t i = 0; i < lightPositions.size(); ++i) {
-      shader.set_vec3("uLightPositions[" + std::to_string(i) + "]", lightPositions[i]);
-      shader.set_vec3("uLightColors[" + std::to_string(i) + "]", lightColors[i]);
-    }
-    shader.set_int("uLightCount", static_cast<int>(lightPositions.size()));
-
     // ---- Draw ----
-    glm::mat4 model_matrix = glm::mat4(1.0f);
     shader.set_mat4("model", model_matrix);
     model->draw(shader);
 
