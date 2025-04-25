@@ -4,6 +4,8 @@
 
 #pragma once
 
+#define MAX_BONE_INFLUENCE 4
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Shader.hpp>
@@ -17,6 +19,10 @@ struct Vertex {
   glm::vec3 position;
   glm::vec3 normal;
   glm::vec2 tex_coords;
+  glm::vec3 tangent;
+  glm::vec3 bitangent;
+  int m_bone_ids[MAX_BONE_INFLUENCE];
+  float m_weights[MAX_BONE_INFLUENCE];
 };
 
 namespace STARBORN {
