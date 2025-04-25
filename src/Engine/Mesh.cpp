@@ -52,9 +52,9 @@ namespace STARBORN {
   }
 
   // ---- Draw ----
-  void Mesh::draw(Shader shader) {
-     unsigned int diffuseNr = 0;
-     unsigned int specularNr = 0;
+  void Mesh::draw(const Shader &shader) const {
+     unsigned int diffuseNr = 1;
+     unsigned int specularNr = 1;
 
      for (unsigned int i = 0; i < textures_.size(); i++) {
        glActiveTexture(GL_TEXTURE0 + i);
