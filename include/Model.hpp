@@ -20,12 +20,23 @@ namespace STARBORN {
     // ---- Model Data ----
     std::vector<Mesh> meshes_;
     std::string directory_;
+    tinygltf::Model model_;
 
     // ---- Private Methods ----
     void load_model(const std::string& path);
-    void process_node(tinygltf::Node& node, const tinygltf::Model& model);
+    void process_node(const tinygltf::Node& node, const tinygltf::Model& model);
     Mesh process_mesh(const tinygltf::Primitive& primitive, const tinygltf::Model& model);
     std::vector<Texture> load_material_textures(const tinygltf::Material& material,
       const std::string &type);
+  public:
+    Model(const std::string &path) {
+      load_model(path);
+    }
+
+    void draw(Shader shader) {
+      for (auto &mesh : meshes_) {
+        mesh.draw(shader);
+      }
+    }
   };
 } // STARBORN
