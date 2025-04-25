@@ -14,6 +14,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <fstream>
+#include <sstream>
 
 namespace STARBORN {
   class Model {
@@ -152,13 +154,13 @@ namespace STARBORN {
     std::string directory_;
     bool gamma_correction_;
 
-    Model(const std::string &path) {
+    explicit Model(const std::string &path) {
       load_model(path);
     }
 
-    void draw(Shader shader) {
-      for (auto &mesh : meshes_) {
-        mesh.draw(shader);
+    void draw(Shader &shader) {
+      for (unsigned int i = 0; i < meshes_.size(); i++) {
+        meshes_[i].draw(shader);
       }
     }
   };
