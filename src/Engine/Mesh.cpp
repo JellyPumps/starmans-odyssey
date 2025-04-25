@@ -3,74 +3,71 @@
 */
 
 #include "Mesh.hpp"
+#include <utility>
 
 namespace STARBORN {
   // ---- Constructor & Destructor ----
-  Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices)
-  : vertices_(vertices), indices_(indices), use_indices_(!indices.empty()) {
-    // ---- Generate Buffers ----
-    generate_buffers();
+   Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
+     this->vertices_ = std::move(vertices);
+     this->indices_ = std::move(indices);
+     this->textures_ = std::move(textures);
 
-    // ---- Bind Buffers ----
-    glBindVertexArray(vertex_array_object_);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_array_object_);
-    glBufferData(GL_ARRAY_BUFFER,
-      static_cast<GLsizeiptr>(vertices_.size() * sizeof(float)),
-      vertices_.data(), GL_STATIC_DRAW);
+     setup_mesh();
+   }
 
-    if (use_indices_) {
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer_object_);
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-        static_cast<GLsizeiptr>(indices_.size() * sizeof(unsigned int)),
-        indices_.data(), GL_STATIC_DRAW);
-    }
+  // ---- Setup Mesh ----
+  void Mesh::setup_mesh() {
+     // ---- Generate Buffers ----
+     glGenVertexArrays(1, &VAO);
+     glGenBuffers(1, &VBO);
+     glGenBuffers(1, &EBO);
 
-    // ---- Link Vertex Attributes ----
-    link_vertex_attributes();
-  }
+     // ---- Bind Buffers ----
+     glBindVertexArray(VAO);
+     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-  Mesh::~Mesh() {
-    glDeleteBuffers(1, &vertex_buffer_object_);
-    glDeleteBuffers(1, &element_buffer_object_);
-    glDeleteVertexArrays(1, &vertex_array_object_);
-  }
+     // ---- Set Buffer Data ----
+     glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(Vertex), &vertices_[0], GL_STATIC_DRAW);
 
-  // ---- Private Methods ----
-  void Mesh::generate_buffers() {
-    glGenVertexArrays(1, &vertex_array_object_);
-    glGenBuffers(1, &vertex_buffer_object_);
-    glGenBuffers(1, &element_buffer_object_);
-  }
+     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(unsigned int), &indices_[0], GL_STATIC_DRAW);
 
-  void Mesh::link_vertex_attributes() {
-    // POSITION (3), COLOR (3), NORMAL (3), TEXCOORD (2)
-    const GLsizei stride = 11 * sizeof(float);
+     // ---- Vertex Positions ----
+     glEnableVertexAttribArray(0);
+     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<void *>(nullptr));
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, static_cast<void *>(0));
-    glEnableVertexAttribArray(0);  // Position
+     // ---- Vertex Normals ----
+     glEnableVertexAttribArray(1);
+     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), static_cast<void *>(nullptr));
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void *>(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);  // Color
-
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void *>(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);  // Normal
-
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void *>(9 * sizeof(float)));
-    glEnableVertexAttribArray(3);  // TexCoord
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+     // ---- Vertex Texture Coordinates ----
+     glEnableVertexAttribArray(2);
+     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, TexCoords)));
   }
 
   // ---- Draw ----
-  void Mesh::draw() const {
-    glBindVertexArray(vertex_array_object_);
+  void Mesh::draw(Shader &shader) {
+     unsigned int diffuseNr = 0;
+     unsigned int specularNr = 0;
 
-    if (use_indices_) {
-      glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices_.size()), GL_UNSIGNED_INT, nullptr);
-    } else {
-      glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices_.size() / 8));
-    }
+     for (unsigned int i = 0; i < textures_.size(); i++) {
+       glActiveTexture(GL_TEXTURE0 + i);
+
+       std::string number;
+       std::string name = textures_[i].type;
+
+       if (name == "texture_diffuse") number = std::to_string(diffuseNr++);
+       else if (name == "texture_specular") number = std::to_string(specularNr++);
+
+       shader.set_int(("material." + name + number).c_str(), i);
+       glBindTexture(GL_TEXTURE_2D, textures_[i].id);
+     }
+
+     glActiveTexture(GL_TEXTURE0);
+
+     // ---- Draw Mesh ----
+     glBindVertexArray(VAO);
+     glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices_.size()), GL_UNSIGNED_INT, nullptr);
+     glBindVertexArray(0);
   }
-
 } // STARBORN

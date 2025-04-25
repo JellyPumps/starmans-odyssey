@@ -6,36 +6,43 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <Shader.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <string>
 #include <vector>
 
+struct Vertex {
+  glm::vec3 position;
+  glm::vec3 Normal;
+  glm::vec2 TexCoords;
+};
+
+struct Texture {
+  unsigned int id;
+  std::string type;
+};
+
 namespace STARBORN {
+  class Mesh {
+  private:
+    // ---- Variables ----
+    unsigned int VAO, VBO, EBO;
 
-class Mesh {
-private:
-  // ---- Variables ----
-  unsigned int vertex_buffer_object_{};
-  unsigned int vertex_array_object_{};
-  unsigned int element_buffer_object_{};
+    // ---- Private Methods ----
+    void setup_mesh();
+  public:
+    // ---- Variables ----
+    std::vector<Vertex> vertices_;
+    std::vector<unsigned int> indices_;
+    std::vector<Texture> textures_;
 
-  std::vector<float> vertices_;
-  std::vector<unsigned int> indices_;
-  bool use_indices_{false};
+    // ---- Constructor & Destructor ----
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    ~Mesh();
 
-  // ---- Private Methods ----
-  void generate_buffers();
-  static void link_vertex_attributes();
-public:
-  // ---- Constructor & Destructor ----
-  explicit Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices = {});
-  ~Mesh();
-
-  // ---- Methods ----
-  void draw() const;
-  [[nodiscard]] unsigned int get_vertex_buffer_object() const { return vertex_buffer_object_; }
-  [[nodiscard]] unsigned int get_vertex_array_object() const { return vertex_array_object_; }
-  [[nodiscard]] unsigned int get_element_buffer_object() const { return element_buffer_object_; }
-
-  int material_index{-1};
+    // ---- Methods ----
+    void draw(Shader &shader);
 };
 
 } // STARBORN
