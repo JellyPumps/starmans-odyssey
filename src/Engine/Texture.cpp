@@ -12,20 +12,39 @@ namespace STARBORN {
     setup_texture();
   }
 
-  Texture::Texture(const unsigned char* data, int width, int height, int channels,
-               const std::string& type) : type_(type) {
-    glGenTextures(1, &texture_id_);
-    glBindTexture(GL_TEXTURE_2D, texture_id_);
-
-    const GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    setup_texture();
+  Texture::Texture(const std::vector<unsigned char>& data, int width, int height, int channels,
+               const std::string& type, const std::string& path)
+  : width_(width), height_(height), nr_channels_(channels),
+    type_(type), path_(path), data_(data) {
+    load_from_memory();
   }
 
   Texture::~Texture() {
     glDeleteTextures(1, &texture_id_);
+  }
+
+  void Texture::load_from_memory() {
+    if (data_.empty()) {
+      throw std::runtime_error("Texture data is empty");
+    }
+
+    glGenTextures(1, &texture_id_);
+    glBindTexture(GL_TEXTURE_2D, texture_id_);
+
+    GLenum format;
+    if (nr_channels_ == 1)
+      format = GL_RED;
+    else if (nr_channels_ == 3)
+      format = GL_RGB;
+    else if (nr_channels_ == 4)
+      format = GL_RGBA;
+    else {
+      throw std::runtime_error("Unsupported number of texture channels");
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width_, height_, 0,
+                 format, GL_UNSIGNED_BYTE, data_.data());
+    setup_texture();
   }
 
   void Texture::setup_texture() const {
