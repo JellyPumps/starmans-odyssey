@@ -38,7 +38,7 @@ namespace STARBORN {
     ~Mesh();
 
     // ---- Methods ----
-    void draw(Shader &shader);
+    void draw(Shader shader);
 };
 
 } // STARBORN

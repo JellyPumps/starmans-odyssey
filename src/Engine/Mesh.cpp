@@ -7,13 +7,19 @@
 
 namespace STARBORN {
   // ---- Constructor & Destructor ----
-   Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
+  Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
      this->vertices_ = std::move(vertices);
      this->indices_ = std::move(indices);
      this->textures_ = std::move(textures);
 
      setup_mesh();
-   }
+  }
+
+  Mesh::~Mesh() {
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+  }
 
   // ---- Setup Mesh ----
   void Mesh::setup_mesh() {
@@ -42,11 +48,11 @@ namespace STARBORN {
 
      // ---- Vertex Texture Coordinates ----
      glEnableVertexAttribArray(2);
-     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, TexCoords)));
+     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void *>(offsetof(Vertex, tex_coords)));
   }
 
   // ---- Draw ----
-  void Mesh::draw(Shader &shader) {
+  void Mesh::draw(Shader shader) {
      unsigned int diffuseNr = 0;
      unsigned int specularNr = 0;
 
