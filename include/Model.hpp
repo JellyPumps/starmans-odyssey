@@ -6,7 +6,6 @@
 
 #include "Material.hpp"
 #include "Mesh.hpp"
-#include "Texture.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
@@ -14,25 +13,19 @@
 #include <vector>
 #include <tiny_gltf.h>
 
-
 namespace STARBORN {
 
-class Model {
-public:
-  std::vector<std::shared_ptr<Mesh>> meshes_;
-  std::vector<std::shared_ptr<Texture>> textures_;
-  std::vector<std::shared_ptr<Material>> materials_;
-  glm::mat4 transform_{1.0f};
+  class Model {
+  private:
+    // ---- Model Data ----
+    std::vector<Mesh> meshes_;
+    std::string directory_;
 
-  // ---- Draw ----
-  void draw(const Shader &shader) const;
-};
-
-class ModelLoader {
-private:
-  static std::shared_ptr<Mesh> process_mesh(const tinygltf::Primitive &primitive,
-    const tinygltf::Model &gltf_model);
-public:
-  static std::shared_ptr<Model> load_model(const std::string &path);
-};
+    // ---- Private Methods ----
+    void load_model(const std::string& path);
+    void process_node(tinygltf::Node& node, const tinygltf::Model& model);
+    Mesh process_mesh(const tinygltf::Primitive& primitive, const tinygltf::Model& model);
+    std::vector<Texture> load_material_textures(const tinygltf::Material& material,
+      const std::string &type);
+  };
 } // STARBORN
