@@ -7,6 +7,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Shader.hpp>
+#include <Texture.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <string>
@@ -16,11 +17,6 @@ struct Vertex {
   glm::vec3 position;
   glm::vec3 Normal;
   glm::vec2 TexCoords;
-};
-
-struct Texture {
-  unsigned int id;
-  std::string type;
 };
 
 namespace STARBORN {

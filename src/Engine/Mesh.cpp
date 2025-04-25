@@ -54,13 +54,13 @@ namespace STARBORN {
        glActiveTexture(GL_TEXTURE0 + i);
 
        std::string number;
-       std::string name = textures_[i].type;
+       std::string name = textures_[i].get_type();
 
        if (name == "texture_diffuse") number = std::to_string(diffuseNr++);
        else if (name == "texture_specular") number = std::to_string(specularNr++);
 
        shader.set_int(("material." + name + number).c_str(), i);
-       glBindTexture(GL_TEXTURE_2D, textures_[i].id);
+       textures_[i].bind();
      }
 
      glActiveTexture(GL_TEXTURE0);

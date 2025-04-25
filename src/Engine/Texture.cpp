@@ -5,14 +5,15 @@
 
 namespace STARBORN {
   // ---- Constructors & Destructor ----
-  Texture::Texture(const char *filepath) {
+  Texture::Texture(const char *filepath, const std::string& type) : type_(type) {
     glGenTextures(1, &texture_id_);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
     generate_texture(filepath);
     setup_texture();
   }
 
-  Texture::Texture(const unsigned char* data, int width, int height, int channels) {
+  Texture::Texture(const unsigned char* data, int width, int height, int channels,
+               const std::string& type) : type_(type) {
     glGenTextures(1, &texture_id_);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
 
