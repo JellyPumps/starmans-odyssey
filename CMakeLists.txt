@@ -9,8 +9,10 @@ find_package(OpenGL REQUIRED)
 
 #### GET GLFW ####
 find_package(glfw3 REQUIRED)
-
 include_directories(${OPENGL_INCLUDE_DIR})
+
+#### GET ASSIMP ####
+find_package(assimp REQUIRED)
 
 #### SET SOURCES ####
 set(SOURCES
@@ -23,8 +25,6 @@ set(SOURCES
         src/Engine/Camera.cpp
         src/Engine/Input.cpp
         src/Starman/Player.cpp
-        src/Engine/Model.cpp
-        src/Engine/Material.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
@@ -35,4 +35,4 @@ target_include_directories(starmans_odyssey PRIVATE
         ${OPENGL_INCLUDE_DIR}
 )
 
-target_link_libraries(starmans_odyssey PRIVATE ${OPENGL_LIBRARIES} glfw)
+target_link_libraries(starmans_odyssey PRIVATE ${OPENGL_LIBRARIES} glfw assimp::assimp)
