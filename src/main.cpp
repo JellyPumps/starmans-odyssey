@@ -10,6 +10,8 @@
 #include "Model.hpp"
 #include "Input.hpp"
 #include "Player.hpp"
+#include "ScreenQuad.hpp"
+#include "FrameBuffer.hpp"
 
 int main() {
   // ---- Create Window ----
@@ -32,6 +34,12 @@ int main() {
   // ---- Load Model ----
   STARBORN::Model test_model("assets/models/test_models/tm_002.glb");
 
+  // ---- Post Processing Quad ----
+  STARBORN::ScreenQuad::init();
+  auto frame_buffer = std::make_unique<STARBORN::FrameBuffer>(window.get_width(), window.get_height());
+  auto post_processing_shader = std::make_unique<STARBORN::Shader>(
+    "assets/shaders/post_processing.vert", "assets/shaders/post_processing.frag");
+
   // ---- Disable VSync ----
   glfwSwapInterval(0);
 
@@ -53,6 +61,7 @@ int main() {
     player.update(delta_time);
 
     // ---- Rendering ----
+    frame_buffer->bind();
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -72,11 +81,25 @@ int main() {
     shader.set_mat4("model", model);
     test_model.draw(shader);
 
+    // ---- Post Processing ----
+    frame_buffer->unbind();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    post_processing_shader->use();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, frame_buffer->get_texture_id());
+    post_processing_shader->set_int("screenTexture", 0);
+
+    // ---- Post Processing Parameters ----
+
+    // ---- Draw Screen Quad ----
+    STARBORN::ScreenQuad::draw();
+
     // ---- Event Polling ----
     glfwSwapBuffers(window.get_window());
     glfwPollEvents();
   }
 
+  STARBORN::ScreenQuad::cleanup();
   glfwTerminate();
   return 0;
 }
