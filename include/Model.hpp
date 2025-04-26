@@ -10,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -18,6 +19,29 @@
 #include <sstream>
 
 namespace STARBORN {
+
+  unsigned int texture_from_file(const char *path, const std::string &directory, bool gamma = false);
+
+  Material load_material(aiMaterial *mat) {
+    Material material{};
+    aiColor3D color(0.f, 0.f, 0.f);
+    float shininess;
+
+    mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+    material.diffuse = glm::vec3(color.r, color.g, color.b);
+
+    mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    material.ambient = glm::vec3(color.r, color.g, color.b);
+
+    mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    material.specular = glm::vec3(color.r, color.g, color.b);
+
+    mat->Get(AI_MATKEY_SHININESS, shininess);
+    material.shininess = shininess;
+
+    return material;
+  }
+
   class Model {
   private:
     // ---- Private Methods ----
@@ -87,6 +111,18 @@ namespace STARBORN {
           vertex.bitangent = vector;
         } else vertex.tex_coords = glm::vec2(0.0f, 0.0f);
 
+        if (scene->mNumMaterials > mesh->mMaterialIndex) {
+          const auto &mat = scene->mMaterials[mesh->mMaterialIndex];
+          aiColor4D diffuse;
+
+          if (AI_SUCCESS == aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
+            vertex.color = glm::vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
+          }
+
+          if (mat->GetTextureCount(aiTextureType_DIFFUSE) > 0) vertex.use_diffuse_texture = 1.0f;
+          else vertex.use_diffuse_texture = 0.0f;
+        }
+
         vertices.push_back(vertex);
       }
 
@@ -119,7 +155,8 @@ namespace STARBORN {
       return Mesh(vertices, indices, textures);
     }
 
-    std::vector<Texture> load_material_textures(aiMaterial *mat, aiTextureType type, std::string type_name) {
+    std::vector<Texture> load_material_textures(const aiMaterial *mat,
+                                                const aiTextureType type, const std::string& type_name) {
       std::vector<Texture> textures;
 
       for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
@@ -128,18 +165,17 @@ namespace STARBORN {
 
         bool skip = false;
         for (unsigned int j = 0; j < textures_loaded_.size(); j++) {
-          if (std::strcmp(textures_loaded_[j].get_path().data(), str.C_Str()) == 0) {
+          if (std::strcmp(textures_loaded_[j].path.data(), str.C_Str()) == 0) {
             textures.push_back(textures_loaded_[j]);
             skip = true;
             break;
           }
         }
         if (!skip) {
-          std::string filename = std::string(str.C_Str());
-          std::string full_path = directory_ + '/' + filename;
-
-          Texture texture(full_path.c_str(), type_name);
-
+          Texture texture;
+          texture.id = texture_from_file(str.C_Str(), this->directory_);
+          texture.type = type_name;
+          texture.path = str.C_Str();
           textures.push_back(texture);
           textures_loaded_.push_back(texture);
         }
@@ -154,14 +190,48 @@ namespace STARBORN {
     std::string directory_;
     bool gamma_correction_;
 
-    explicit Model(const std::string &path) {
+    explicit Model(const std::string &path, bool gamma = false) : gamma_correction_(gamma) {
       load_model(path);
     }
 
     void draw(Shader &shader) {
-      for (unsigned int i = 0; i < meshes_.size(); i++) {
-        meshes_[i].draw(shader);
+      for (auto & mesh : meshes_) {
+        mesh.draw(shader);
       }
     }
   };
+
+  unsigned int texture_from_file(const char *path, const std::string &directory, bool gamma) {
+    std::string filename = std::string(path);
+    filename = directory + '/' + filename;
+
+    unsigned int texture_id;
+    glGenTextures(1, &texture_id);
+
+    int width, height, nr_components;
+    unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nr_components, 0);
+
+    if (data) {
+      GLenum format;
+      if (nr_components == 1) format = GL_RED;
+      else if (nr_components == 3) format = GL_RGB;
+      else if (nr_components == 4) format = GL_RGBA;
+
+      glBindTexture(GL_TEXTURE_2D, texture_id);
+      glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+      glGenerateMipmap(GL_TEXTURE_2D);
+
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+      stbi_image_free(data);
+    } else {
+      stbi_image_free(data);
+      throw std::runtime_error("Failed to load texture from file " + filename);
+    }
+
+    return texture_id;
+  }
 } // STARBORN
