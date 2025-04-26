@@ -19,7 +19,7 @@ namespace STARBORN {
 
     // ---- Bind & Unbind ----
     void bind() const;
-    static void unbind();
+    void unbind();
 
     // ---- Resize ----
     void resize(int width, int height);
