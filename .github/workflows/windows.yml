@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies with vcpkg
         shell: pwsh
         run: |
-          .\vcpkg\vcpkg.exe install glfw3 glew glm --triplet x64-windows
+          .\vcpkg\vcpkg.exe install glfw3 glew glm assimp --triplet x64-windows
           echo "VCPKG_ROOT=$env:GITHUB_WORKSPACE\vcpkg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
 
       - name: Configure CMake

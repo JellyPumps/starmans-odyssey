@@ -10,7 +10,7 @@ jobs:
       - name: Download dependencies
         run: |
           brew update
-          brew install cmake glfw glew glm
+          brew install cmake glfw glew glm assimp
       - name: Configure cmake
         run: cmake -B build
       - name: Build
