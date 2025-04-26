@@ -30,7 +30,7 @@ int main() {
   STARBORN::Shader shader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 
   // ---- Load Model ----
-  STARBORN::Model test_model("assets/models/test_models/tm_001.glb");
+  STARBORN::Model test_model("assets/models/test_models/tm_002.glb");
 
   // ---- Disable VSync ----
   glfwSwapInterval(0);
