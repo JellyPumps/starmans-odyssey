@@ -5,7 +5,6 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <vector>
 #include "Window.hpp"
 #include "Shader.hpp"
 #include "Model.hpp"
@@ -28,21 +27,18 @@ int main() {
 
   // ---- Shaders ----
   glEnable(GL_DEPTH_TEST);
-  const STARBORN::Shader shader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
+  STARBORN::Shader shader("assets/shaders/basic.vert", "assets/shaders/basic.frag");
 
   // ---- Load Model ----
-  std::shared_ptr<STARBORN::Model> model = STARBORN::ModelLoader::load_model(
-    "assets/models/test_models/test_surface.glb");
+  STARBORN::Model test_model("assets/models/test_models/tm_001.glb");
 
   // ---- Disable VSync ----
   glfwSwapInterval(0);
 
-  // ---- Create Matrix ----
-  auto model_matrix = glm::mat4(1.0f);
-
   float last_frame = 0.0f;
   // ---- Main Loop ----
   while (!glfwWindowShouldClose(window.get_window())) {
+    float ambient_strength = 1.0f;
     // ---- Time ----
     auto current_frame = static_cast<float>(glfwGetTime());
     float delta_time = current_frame - last_frame;
@@ -57,18 +53,24 @@ int main() {
     player.update(delta_time);
 
     // ---- Rendering ----
-    glClearColor(40.0f / 255.0f, 30.0f / 255.0f, 60.0f / 255.0f, 1.0f);
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shader.use();
+
+    shader.set_vec3("viewPos", camera->get_position());
+    shader.set_vec3("lightPos", glm::vec3(2.0f, 2.0f, 2.0f));
+    shader.set_vec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
     // ---- Transformation ----
     shader.set_mat4("projection", camera->get_projection_matrix());
     shader.set_mat4("view", player.get_camera()->get_view_matrix());
 
     // ---- Draw ----
-    shader.set_mat4("model", model_matrix);
-    model->draw(shader);
+    auto model = glm::mat4(1.0f);
+    model = translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+    shader.set_mat4("model", model);
+    test_model.draw(shader);
 
     // ---- Event Polling ----
     glfwSwapBuffers(window.get_window());
