@@ -9,7 +9,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <Shader.hpp>
-#include <Texture.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <string>
@@ -21,8 +20,23 @@ struct Vertex {
   glm::vec2 tex_coords;
   glm::vec3 tangent;
   glm::vec3 bitangent;
+  glm::vec4 color;
+  float use_diffuse_texture;
   int m_bone_ids[MAX_BONE_INFLUENCE];
   float m_weights[MAX_BONE_INFLUENCE];
+};
+
+struct Texture {
+  unsigned int id;
+  std::string type;
+  std::string path;
+};
+
+struct Material {
+  glm::vec3 diffuse;
+  glm::vec3 specular;
+  glm::vec3 ambient;
+  float shininess;
 };
 
 namespace STARBORN {
@@ -72,6 +86,14 @@ namespace STARBORN {
       glEnableVertexAttribArray(6);
       glVertexAttribPointer(6, MAX_BONE_INFLUENCE, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_weights));
 
+      // ---- Color ----
+      glEnableVertexAttribArray(7);
+      glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, color));
+
+      // ---- Use Diffuse Texture Flag ----
+      glEnableVertexAttribArray(8);
+      glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, use_diffuse_texture));
+
       glBindVertexArray(0);
     }
   public:
@@ -101,7 +123,7 @@ namespace STARBORN {
         glActiveTexture(GL_TEXTURE0 + i);
 
         std::string number;
-        std::string name = textures_[i].get_type();
+        std::string name = textures_[i].type;
 
         if (name == "texture_diffuse") {
           number = std::to_string(diffuse_nr++);
@@ -114,7 +136,7 @@ namespace STARBORN {
         }
 
         glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
-        textures_[i].bind();
+        glBindTexture(GL_TEXTURE_2D, textures_[i].id);
       }
       glBindVertexArray(VAO);
       glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices_.size()), GL_UNSIGNED_INT, 0);
