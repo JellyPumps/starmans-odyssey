@@ -26,7 +26,7 @@ namespace STARBORN {
 
     // ---- Getters & Setters ----
     [[nodiscard]] unsigned int get_texture_id() const { return texture_color_buffer; }
-    [[nodiscard]] int get_width() const { return width; }
-    [[nodiscard]] int get_height() const { return height; }
+    [[nodiscard]] int get_width() const { return width_; }
+    [[nodiscard]] int get_height() const { return height_; }
   };
 }
