@@ -20,7 +20,6 @@ set(SOURCES
         libs/src/glad.c
         src/Engine/Window.cpp
         src/Engine/Shader.cpp
-        src/Engine/Texture.cpp
         src/Engine/Camera.cpp
         src/Engine/Input.cpp
         src/Starman/Player.cpp
