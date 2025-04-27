@@ -10,7 +10,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -22,7 +21,7 @@ namespace STARBORN {
 
   unsigned int texture_from_file(const char *path, const std::string &directory, bool gamma = false);
 
-  Material load_material(aiMaterial *mat) {
+  inline Material load_material(aiMaterial *mat) {
     Material material{};
     aiColor3D color(0.f, 0.f, 0.f);
     float shininess;
@@ -201,7 +200,7 @@ namespace STARBORN {
     }
   };
 
-  unsigned int texture_from_file(const char *path, const std::string &directory, bool gamma) {
+  inline unsigned int texture_from_file(const char *path, const std::string &directory, bool gamma) {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
 
