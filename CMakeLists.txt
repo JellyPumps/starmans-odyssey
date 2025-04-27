@@ -25,6 +25,8 @@ set(SOURCES
         src/Starman/Player.cpp
         src/Engine/FrameBuffer.cpp
         src/Engine/ScreenQuad.cpp
+        src/Engine/SceneManager.cpp
+        src/Starman/TestScene.cpp
 )
 
 add_executable(starmans_odyssey ${SOURCES})
